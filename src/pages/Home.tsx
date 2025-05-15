@@ -28,17 +28,6 @@ const Home = () => {
                     <h2 className="font-semibold text-gray-500 mb-1">Student ID</h2>
                     <p className="text-lg font-medium">{data.data.student_info.std_id}</p>
                 </div>
-
-                <div className="bg-white/80 backdrop-blur-sm p-5 rounded-2xl shadow-sm">
-                    <h2 className="font-semibold text-gray-500 mb-1">Current Terms</h2>
-                    <div className="flex gap-2">
-                        {data.data.terms.map((term: any) => (
-                            <span key={term.term_id} className="text-blue-600">
-                                Term {term.index}
-                            </span>
-                        ))}
-                    </div>
-                </div>
             </div>
 
             {/* Quick Actions */}
