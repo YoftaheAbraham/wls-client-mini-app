@@ -11,6 +11,7 @@ const Login = () => {
     const token = useAuth();
     const contextData = useData()
     const navigator = useNavigate();
+    const [isLoading, setIsLoading] = useState(false)
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -106,7 +107,7 @@ const Login = () => {
             type="submit"
             className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 px-4 rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-300"
           >
-            Sign In
+            {isLoading ? "Signing in..." : "Sign In"}
           </button>
 
           <div className="text-center pt-2">
