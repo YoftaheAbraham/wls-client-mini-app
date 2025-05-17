@@ -9,7 +9,7 @@ const Login = () => {
     password: ''
   });
     const token = useAuth();
-  const contextData = useData()
+    const contextData = useData()
     const navigator = useNavigate();
 
   const handleChange = (e: any) => {
@@ -37,8 +37,8 @@ const Login = () => {
       
         if(data.success) {
             toast.success("Successfully signed in");
-            token?.setToken(data.data.token)
-            contextData?.setData(data.data.data)
+            token?.setToken(data.data.token, true)
+            contextData?.setData(data.data.data, true)
 
             setTimeout(() => {
               navigator('/')

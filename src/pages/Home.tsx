@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useData } from '../context/context';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
     const data = useData();
+
+    useEffect(() => {
+        console.log(data);
+        
+    })
 
     if (!data?.data.student_info) return (
         <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-indigo-50 to-white">
