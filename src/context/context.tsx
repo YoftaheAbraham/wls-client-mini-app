@@ -1,7 +1,7 @@
-import React, { createContext, useLayoutEffect, useState } from "react";
+import React, { createContext, useEffect, useLayoutEffect, useState } from "react";
 
-const Authcontext = createContext<{token: string | null, setToken: (token: string, save_token: boolean) => void} | null>(null);
-const DataContext = createContext<{data: any | null, setData: (data: object, save_data: boolean) => void | null} | null>(null)
+const Authcontext = createContext<{token: string | null, setToken: (token: string, save_token: boolean) => void, logout: () => void} | null>(null);
+const DataContext = createContext<{data: any | null, setData: (data: object, save_data: boolean) => void | null} | null>(null);
 
 export const AuthProvider = ({children}: {children: React.ReactNode}) => {
     const [token, setToken] = useState<string | null>(null);
@@ -18,9 +18,14 @@ export const AuthProvider = ({children}: {children: React.ReactNode}) => {
             localStorage.setItem("token", token)
         }
     }
+
+    const logout = () => {
+        localStorage.clear();
+        setToken(null)
+    }
     return (
         <>
-           <Authcontext.Provider value={{token, setToken: setTokenData}}>{children}</Authcontext.Provider>
+           <Authcontext.Provider value={{token, setToken: setTokenData, logout}}>{children}</Authcontext.Provider>
         </>
     )
 }
@@ -34,7 +39,9 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
             setData(JSON.parse(localData.toString()));
             console.log(data, localData);
         }
-    }, [])
+    }, []);
+
+    useEffect
 
     const setStudentData = (data: object, save_data: boolean) => {
         setData(data)
