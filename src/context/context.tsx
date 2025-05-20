@@ -8,8 +8,6 @@ export const AuthProvider = ({children}: {children: React.ReactNode}) => {
 
     useLayoutEffect(() => {
         setToken(localStorage.getItem("token"));
-        console.log(token);
-        
     }, [token])
 
     const setTokenData = (token: string, save_token: boolean) => {
@@ -37,7 +35,6 @@ export const DataProvider = ({children}: {children: React.ReactNode}) => {
         let localData = localStorage.getItem("data") || "";
         if(localData && localData != "") {
             setData(JSON.parse(localData.toString()));
-            console.log(data, localData);
         }
     }, []);
 

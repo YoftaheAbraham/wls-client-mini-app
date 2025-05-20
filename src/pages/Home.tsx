@@ -5,13 +5,7 @@ import { Link } from 'react-router-dom';
 const envData = import.meta.env
 
 const Home = () => {
-    const data = useData();
-
-    useEffect(() => {
-        console.log(data);
-        console.log(envData);
-        
-    })
+    const data = useData()
 
     if (!data?.data.student_info) return (
         <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-indigo-50 to-white">
@@ -22,7 +16,7 @@ const Home = () => {
         </div>
     );
 
-    const { full_name, grade, class_id, portrait, std_id, email } = data.data.student_info;
+    const { full_name, grade, current_class, portrait, std_id, email } = data.data.student_info;
     const firstName = full_name.split(' ')[0];
 
     return (
@@ -56,7 +50,7 @@ const Home = () => {
                     </div>
                     <div>
                         <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Class</p>
-                        <p className="font-medium text-gray-700">{class_id}</p>
+                        <p className="font-medium text-gray-700">{current_class.grade ? `Grade ${current_class.grade}${current_class.section}` : `Grade ${grade}`}</p>
                     </div>
                     <div>
                         <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Student ID</p>
@@ -64,7 +58,7 @@ const Home = () => {
                     </div>
                     <div>
                         <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">Email</p>
-                        <p className="font-medium text-gray-700 truncate">{email}</p>
+                        <p className="font-medium text-gray-700 truncate">{email ? email : "Not specified"}</p>
                     </div>
                 </div>
             </div>
