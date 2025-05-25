@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth, useData } from '../context/context';
-import type { AppData, Term } from '../types';
-import Skeleton from 'react-loading-skeleton';
+import type { AppData } from '../types';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 interface TopPerformer {
@@ -18,20 +17,20 @@ const Stats = () => {
   const token = useAuth();
   const [selectedTerm, setSelectedTerm] = useState<string>('');
   const [selectedYear, setSelectedYear] = useState<string>('');
-  const [topPerformers, setTopPerformers] = useState<Record<string, TopPerformer[]>>({});
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [_, setTopPerformers] = useState<Record<string, TopPerformer[]>>({});
+  const [__, setLoading] = useState<boolean>(true);
+  const [___, setError] = useState<string | null>(null);
   const data = useData() as { data?: AppData };
 
   // Get available years (last 3 years + current year)
-  const getAvailableYears = () => {
-    const currentYear = new Date().getFullYear();
-    return [
-      currentYear.toString(),
-      (currentYear - 1).toString(),
-      (currentYear - 2).toString()
-    ];
-  };
+  // const getAvailableYears = () => {
+  //   const currentYear = new Date().getFullYear();
+  //   return [
+  //     currentYear.toString(),
+  //     (currentYear - 1).toString(),
+  //     (currentYear - 2).toString()
+  //   ];
+  // };
 
   useEffect(() => {
     if (data.data?.terms.length && !selectedTerm) {
@@ -70,31 +69,31 @@ const Stats = () => {
     fetchTopPerformers();
   }, [selectedTerm, selectedYear, token]);
 
-  const getMedalColor = (rank: number) => {
-    switch (rank) {
-      case 1:
-        return 'bg-gradient-to-b from-yellow-400 to-yellow-300';
-      case 2:
-        return 'bg-gradient-to-b from-gray-300 to-gray-200';
-      case 3:
-        return 'bg-gradient-to-b from-amber-600 to-amber-500';
-      default:
-        return 'bg-indigo-900';
-    }
-  };
+  // const getMedalColor = (rank: number) => {
+  //   switch (rank) {
+  //     case 1:
+  //       return 'bg-gradient-to-b from-yellow-400 to-yellow-300';
+  //     case 2:
+  //       return 'bg-gradient-to-b from-gray-300 to-gray-200';
+  //     case 3:
+  //       return 'bg-gradient-to-b from-amber-600 to-amber-500';
+  //     default:
+  //       return 'bg-indigo-900';
+  //   }
+  // };
 
-  const getMedalIcon = (rank: number) => {
-    switch (rank) {
-      case 1:
-        return '🥇';
-      case 2:
-        return '🥈';
-      case 3:
-        return '🥉';
-      default:
-        return rank;
-    }
-  };
+  // const getMedalIcon = (rank: number) => {
+  //   switch (rank) {
+  //     case 1:
+  //       return '🥇';
+  //     case 2:
+  //       return '🥈';
+  //     case 3:
+  //       return '🥉';
+  //     default:
+  //       return rank;
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-gray-900 pb-20">

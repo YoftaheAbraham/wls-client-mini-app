@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth, useData } from '../context/context';
 import type { AppData, Classroom, Term } from '../types';
 import Skeleton from 'react-loading-skeleton';

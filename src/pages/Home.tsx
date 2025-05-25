@@ -1,6 +1,4 @@
-import React, { useEffect } from 'react';
 import { useData } from '../context/context';
-import { Link } from 'react-router-dom';
 
 const Home = () => {
     const data = useData()
