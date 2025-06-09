@@ -32,6 +32,7 @@ interface ResultsData {
     total_marks?: string;
     average_mark?: string;
     rank?: string | null;
+    rank_ratio?: string | null
     subjects_results?: SubjectResult[];
     std_id?: string;
     first_name?: string;
@@ -52,21 +53,6 @@ const ResultHub = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const data = useData() as { data?: AppData };
-
-  const isEmptyResults = (results: ResultsData | null) => {
-    if (!results) return true;
-
-    if (selectedTerm === 'overall') {
-      return !results.result_data.overall_avg || !results.result_data.terms_data?.length;
-    } else {
-      return (
-        results.result_data.subjects_count === "0" &&
-        results.result_data.total_marks === "0" &&
-        results.result_data.average_mark === "0" &&
-        (!results.result_data.subjects_results || results.result_data.subjects_results.length === 0)
-      );
-    }
-  };
 
   const transformClassToGrade = (classData: any): Classroom => {
     return {
@@ -250,7 +236,34 @@ const ResultHub = () => {
   const totalMarks = isOverall ?
     results?.result_data.overall_total :
     results?.result_data.total_marks;
+  const isEmptyResults = (results: ResultsData | null): boolean => {
+    if (!results) return true;
 
+    if (selectedTerm === 'overall') {
+      // For overall results: check if any of these are missing/invalid
+      const { overall_avg, terms_data } = results.result_data;
+      const hasTermsData = Array.isArray(terms_data) && terms_data.length > 0;
+      const hasValidAvg = typeof overall_avg === 'string' && parseFloat(overall_avg) > 0;
+
+      return !hasValidAvg || !hasTermsData;
+    } else {
+      // For term-wise results: check if all values are "0" and no subject results
+      const {
+        subjects_count,
+        total_marks,
+        average_mark,
+        subjects_results
+      } = results.result_data;
+
+      const hasSubjects = subjects_results && subjects_results.length > 0;
+      const isZeroValues =
+        subjects_count === "0" &&
+        total_marks === "0" &&
+        average_mark === "0";
+
+      return isZeroValues && !hasSubjects;
+    }
+  };
   return (
     <div className="min-h-screen bg-[#17212B] pb-20">
       {/* Header */}
@@ -330,8 +343,8 @@ const ResultHub = () => {
       {/* Summary Card */}
       {!isEmptyResults(results) && (
         <div className={`mx-6 mt-6 p-5 rounded-xl border ${averageMark < 75 ? 'bg-red-900/20 border-red-700/30 text-red-400' :
-            averageMark >= 95 ? 'bg-gradient-to-r from-yellow-900/30 to-yellow-800/20 border-yellow-600/30 text-yellow-300' :
-              'bg-gradient-to-r from-[#2B95D6] to-[#227AB5] border-[#54A7E5]/30 text-white'
+          averageMark >= 95 ? 'bg-gradient-to-r from-yellow-900/30 to-yellow-800/20 border-yellow-600/30 text-yellow-300' :
+            'bg-gradient-to-r from-[#2B95D6] to-[#227AB5] border-[#54A7E5]/30 text-white'
           }`}>
           {loading ? (
             <div className="flex justify-between items-center">
@@ -376,10 +389,10 @@ const ResultHub = () => {
                     <p className="text-sm mt-1">
                       Rank: <span className='font-black'>{
                         averageMark < 75 ?
-                          <span className="text-red-300">{results.result_data.rank}</span> :
+                          <span className="text-red-300">{results.result_data.rank_ratio}</span> :
                           averageMark >= 95 ?
-                            <span className="text-yellow-300">{results.result_data.rank}</span> :
-                            <span className="text-white">{results.result_data.rank}</span>
+                            <span className="text-yellow-300">{results.result_data.rank_ratio}</span> :
+                            <span className="text-white">{results.result_data.rank_ratio}</span>
                       }</span>
                     </p>
                   )}
@@ -389,8 +402,8 @@ const ResultHub = () => {
                 )}
               </div>
               <div className={`p-3 rounded-full ${averageMark < 75 ? 'bg-red-900/30' :
-                  averageMark >= 95 ? 'bg-yellow-900/30' :
-                    'bg-white/20'
+                averageMark >= 95 ? 'bg-yellow-900/30' :
+                  'bg-white/20'
                 }`}>
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
@@ -519,10 +532,10 @@ const ResultHub = () => {
                     <div className="text-right">
                       <div className="flex items-center justify-end">
                         <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${result.result >= 95 ? 'bg-yellow-900/30 text-yellow-300' :
-                            result.result >= 90 ? 'bg-green-900/30 text-green-300' :
-                              result.result >= 80 ? 'bg-blue-900/30 text-blue-300' :
-                                result.result >= 75 ? 'bg-[#54A7E5]/30 text-[#54A7E5]' :
-                                  'bg-red-900/30 text-red-300'
+                          result.result >= 90 ? 'bg-green-900/30 text-green-300' :
+                            result.result >= 80 ? 'bg-blue-900/30 text-blue-300' :
+                              result.result >= 75 ? 'bg-[#54A7E5]/30 text-[#54A7E5]' :
+                                'bg-red-900/30 text-red-300'
                           }`}>
                           {result.result >= 95 ? 'A+' :
                             result.result >= 90 ? 'A' :
